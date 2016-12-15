@@ -4,6 +4,7 @@ var autoprefixer = require('gulp-autoprefixer');
 var minify = require('gulp-minify-css');
 var wrap = require('gulp-wrap');
 var browserSync = require('browser-sync');
+// 記得ruby gem要裝compass
 var compass = require('gulp-compass');
 var uglify = require('gulp-uglify');
 var tinypng = require('gulp-tinypng');
@@ -29,11 +30,12 @@ gulp.task('data', ['cleanData'], function() {
 });
 
 gulp.task('compass', ['cleanCss'], function(){
-  gulp.src('./src/scss/**/*.scss')
+  return gulp.src('./src/scss/**/*.scss')
       .pipe(compass({
         config_file: './config.rb',
         sourcemap: false,
         time: true,
+        debug: true,
         css: './dist/css/',
         sass: './src/scss/',
         image: './src/images/',
@@ -41,6 +43,7 @@ gulp.task('compass', ['cleanCss'], function(){
       })).on('error', handleError)
       .pipe(autoprefixer())
       .pipe(minify())
+      .pipe(gulp.dest('./dist/css/'))
       .pipe(browserSync.reload({stream:true}));
 });
 

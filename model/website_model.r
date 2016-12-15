@@ -1,22 +1,32 @@
 #!/usr/bin/env Rscript
+library(rpart)
+library(randomForest)
+library(randomForestSRC)
 
+args <- commandArgs(trailingOnly=TRUE)
+if( length(args) == 0 ){
+	stop( "必須輸入處理的檔案名稱!", call.=FALSE )
+}
+filename <- args[1]
 
 # random forest 
-rf_feature_rdata <- "~/Desktop/infoHero_heatmap/model/rdata/rf_features.RData"
+rf_feature_rdata <- "./rdata/rf_features.RData"
 load(rf_feature_rdata)
-rf_model_rdata <- "~/Desktop/infoHero_heatmap/model/rdata/rf_model.RData"
+rf_model_rdata <- "./rdata/rf_model.RData"
 load(rf_model_rdata)
-rf_src_model_rdata <- "~/Desktop/infoHero_heatmap/model/rdata/rf_src_model.RData"
+rf_src_model_rdata <- "./rdata/rf_src_model.RData"
 load(rf_src_model_rdata)
 
 # decision tree
-dt_model_rdata <- "~/Desktop/infoHero_heatmap/model/rdata/dt_model.RData"
+dt_model_rdata <- "./rdata/dt_model.RData"
 load(dt_model_rdata)
 
 # data preprocess
 # test
-target_file <- "~/Desktop/infoHero_heatmap/model/testcases/template_v1.csv"
+target_file <- paste("../uploads/", filename, ".csv", sep="")
+
 dataframe <- read.csv(target_file)
+original <- dataframe
 
 # preprocess
 dataframe <- transform( dataframe, OCCUPATION.無工作=(OCCUPATION == "無工作") )
@@ -24,26 +34,11 @@ dataframe <- transform( dataframe, OCCUPATION.不詳=(OCCUPATION == "不詳") )
 dataframe <- transform( dataframe, X1.4.5.6=(X1+X4+X5+X6))
 
 # edu hash
-edu_hash_file <- "~/Desktop/infoHero_heatmap/model/rdata/edu.RData"
-edu_hash <- new.env(hash=T)
-edu_hash[["不詳"]] <- "1"
-edu_hash[["不識字"]] <- "2"
-edu_hash[["國中"]] <- "3"
-edu_hash[["國小"]] <- "4"
-edu_hash[["大學"]] <- "5"
-edu_hash[["專科"]] <- "6"
-edu_hash[["研究所以上"]] <- "7"
-edu_hash[["自修"]] <- "8"
-edu_hash[["高中(職)"]] <- "9"
-save(edu_hash, file=edu_hash_file)
-
+edu_hash_file <- "./rdata/edu.RData"
+load(edu_hash_file)
 # MAIMED hash
-maimed_hash_file <- "~/Desktop/infoHero_heatmap/model/rdata/maimed.RData"
-maimed_hash <- new.env(hash=T)
-maimed_hash[["非身心障礙者"]] <- "1"
-maimed_hash[["疑似身心障礙者"]] <- "2"
-maimed_hash[["身心障礙"]] <- "3"
-save(maimed_hash, file=maimed_hash_file)
+maimed_hash_file <- "./rdata/maimed.RData"
+load(maimed_hash_file)
 
 edu_match <- function(x){
 	if(x=="" || x=="不詳"){
@@ -63,7 +58,7 @@ maimed_match <- function(x){
 	}
 }
 
-train_data <- read.csv("~/Desktop/infoHero_heatmap/model/sample.csv")
+train_data <- read.csv("./sample.csv")
 train_data <- na.omit(train_data)
 train_data <- transform(train_data, OCCUPATION.無工作=(OCCUPATION=="無工作"))
 train_data <- transform(train_data, OCCUPATION.不詳=(OCCUPATION=="不詳"))
@@ -91,7 +86,8 @@ rf_test_predict <- round( full_result[1:test_dim] )
 rf_src_predict <- round( predict(model_rf_src, new)$predicted )
 rf_src_predict <- rf_src_predict[1:test_dim]
 
-dataframe$風險指數 <- rf_src_predict
+original$風險指數 <- rf_src_predict
 
-#save
-
+# save
+dist_file <- paste( "../outputs/", filename, "-predicted", ".csv", sep="" )
+write.csv(original, dist_file)
