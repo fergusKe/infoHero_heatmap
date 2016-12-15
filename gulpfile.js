@@ -30,12 +30,11 @@ gulp.task('data', ['cleanData'], function() {
 });
 
 gulp.task('compass', ['cleanCss'], function(){
-  return gulp.src('./src/scss/**/*.scss')
-      .pipe(compass({
+    return  gulp.src('./src/scss/**/*.scss')
+        .pipe(compass({
         config_file: './config.rb',
         sourcemap: false,
         time: true,
-        debug: true,
         css: './dist/css/',
         sass: './src/scss/',
         image: './src/images/',
