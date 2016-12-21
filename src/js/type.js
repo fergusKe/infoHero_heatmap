@@ -38,11 +38,8 @@
         }
       }
     }
-    console.log('pData[index] = ', pData[index]);
     chartGender(pData[index]);
     chartAge(pData[index]);
-
-    console.log('caseType = ', caseType);
 
     setAreaTop10(caseType);
     setVillageTop30(caseType);
@@ -100,8 +97,8 @@
   }
   function chartGender(pData) {
     var data = [
-      {type: '男', value: +pData['男'].replace("%", "")},
-      {type: '女', value: +pData['女'].replace("%", "")}
+      {type: '男', value: Math.floor( +pData['男'].replace("%", "") )},
+      {type: '女', value: Math.floor( +pData['女'].replace("%", "") )}
     ]
     var width = 130,
         height = 140,
@@ -162,11 +159,10 @@
   }
   function chartAge(pData) {
       var data = [
-        {type: '~18', value: +pData['小於18歲'].replace("%", "")},
-        {type: '18~65', value: +pData['18到65歲'].replace("%", "")},
-        {type: '65~', value: +pData['大於65歲'].replace("%", "")}
+        {type: '~18', value: Math.floor( +pData['小於18歲'].replace("%", "") )},
+        {type: '18~65', value: Math.floor( +pData['18到65歲'].replace("%", "") )},
+        {type: '65~', value: Math.floor( +pData['大於65歲'].replace("%", "") )}
       ];
-
       var width = 130,
         height = 140,
         margin = {left: 50, top: 30, right: 30, bottom: 30},

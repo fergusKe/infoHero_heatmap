@@ -377,11 +377,22 @@
 
   			// get color depending on population density value
   			function getColor(d) {
-  				return d > 26 ? '#5A0000' :
-  							 d > 21  ? '#9C0000' :
-  							 d > 16  ? '#DE1021' :
-  							 d > 11  ? '#FF4D52' :
-  													'#FF7D84';
+          // console.log('dd = ', locationType);
+          var setColor;
+          if (locationType == 'children') {
+            setColor = d > 5 ? '#5A0000' :
+                      d > 4 ? '#9C0000' :
+                      d > 3 ? '#DE1021' :
+                      d > 2 ? '#FF4D52' :
+                        			'#FF7D84';
+          } else {
+            setColor = d > 26 ? '#5A0000' :
+                      d > 21 ? '#9C0000' :
+                      d > 16 ? '#DE1021' :
+                      d > 11 ? '#FF4D52' :
+                          		 '#FF7D84';
+          }
+  				return setColor;
   			}
 
   			function style(features) {
@@ -448,6 +459,10 @@
   				 grades_data = [1, 11, 16, 21, 26, 65],
   				 labels = [],
   				 from, to;
+
+         if (locationType == 'children') {
+           grades_data = [1, 2, 3, 4, 5, 6];
+         }
 
   			 for (var i = 0; i < grades.length - 1; i++) {
   				 from = grades[i];
