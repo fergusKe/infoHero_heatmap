@@ -26,7 +26,7 @@
     $('.village-num').text(village['各里總案件數']);
 
     console.log('villageName = ', villageName);
-    console.log('village = ', village);
+    // console.log('village = ', village);
 
 
 
@@ -187,8 +187,8 @@
   }
   function chartGender(pData) {
     var data = [
-      {type: '男', value: +pData['男']},
-      {type: '女', value: +pData['女']}
+      {type: '男', value: Math.floor( +pData['男'] )},
+      {type: '女', value: Math.floor( +pData['女'] )}
     ]
     var width = 130,
         height = 140,
@@ -249,9 +249,9 @@
   }
   function chartAge(pData) {
       var data = [
-        {type: '~18', value: +pData['小於18歲']},
-        {type: '18~65', value: +pData['18到65歲']},
-        {type: '65~', value: +pData['大於65歲']}
+        {type: '~18', value: Math.floor( +pData['小於18歲'] )},
+        {type: '18~65', value: Math.floor( +pData['18到65歲'] )},
+        {type: '65~', value: Math.floor( +pData['大於65歲'] )}
       ];
 
       var width = 130,

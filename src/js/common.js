@@ -180,6 +180,7 @@
 
       /*nav*/
       function setNav() {
+        var j_html = $('html');
         var navTitle = $('.nav-title');
         var navListBox = $('.nav-list-box');
         var navListBoxLi = $('.nav-list-box li');
@@ -217,6 +218,16 @@
         }
         navTitle.hover(function() {
           navNowIndex = $(this).index();
+          // 只要有show=1就不動作
+          for (var i = 0; i < 4; i++) {
+            if (navObj.dropdown[i].show == 1) {
+              console.log('navTitle-hover-show');
+              return;
+            }
+          }
+
+          console.log('navTitle-hover-----------');
+
           navTitle.removeClass('active').eq(navNowIndex).addClass('active');
 
           navListBox.css( hideObj ).eq(navNowIndex).css({
@@ -237,13 +248,28 @@
           navListBox.eq(navNowIndex).css({
             top: -navListHeightArr[navNowIndex] + navHoverShowHeight
           });
+          console.log('navTitle.hover = ', navObj.dropdown[navNowIndex]);
         }, function() {
+          for (var i = 0; i < 4; i++) {
+            if (navObj.dropdown[i].show == 1) {
+              console.log('navTitle-show');
+              return;
+            }
+          }
+          console.log('navTitle-----------');
           navTitle.removeClass('active');
           navObj.index = navNowIndex;
           navObj.dropdown[navObj.index].show = 0;
           navListBox.eq(navObj.index).css( hideObj );
         });
         navListBox.hover(function() {
+          for (var i = 0; i < 4; i++) {
+            if (navObj.dropdown[i].show == 1) {
+              console.log('navListBox-hover-show');
+              return;
+            }
+          }
+          console.log('navListBox-hover-----------');
           $(this).css( showObj );
           navTitle.removeClass('active').eq(navNowIndex).addClass('active');
           if (navNowIndex == 3) {
@@ -251,14 +277,52 @@
               'overflow-y': 'auto'
             });
           }
+          console.log('navListBox.hover = ', navObj.dropdown[navNowIndex]);
         }, function() {
+          for (var i = 0; i < 4; i++) {
+            if (navObj.dropdown[i].show == 1) {
+              console.log('navListBox-show');
+              return;
+            }
+          }
+          console.log('navListBox-----------');
           navListBox.eq(navObj.index).css( hideObj );
           navObj.dropdown[navObj.index].show = 0;
           navTitle.removeClass('active');
         });
 
+        j_html.on('click', function(e) {
+    			var j_target = $(e.target);
+    			if ( !j_target.parents().hasClass('nav-dropdown') ) {
+    				// $('.nav-title').removeClass('active');
+            // for (var i = 0; i < 4; i++) {
+            //   if (navObj.dropdown[i].show == 0) {
+            //     navListBox.css( hideObj );
+            //     return;
+            //   }
+            // }
+    			}
+    		});
+        $('.main').click(function() {
+          $('.nav-title').removeClass('active');
+          for (var i = 0; i < 4; i++) {
+            navObj.dropdown[i].show = 0;
+          }
+          navListBox.css( hideObj );
+        });
+        $('.nav-dropdown').click(function() {
+          event.stopPropagation();
+        });
+
         var _navListShow_TL = new Array(4);
         navTitle.click(function() {
+          if (!$(this).hasClass('active')) {
+            for (var i = 0; i < 4; i++) {
+              navObj.dropdown[i].show = 0;
+            }
+            navListBox.css( hideObj );
+            return
+          }
           var navLi = navListBox.eq(navNowIndex).find('li');
           var navLiLength = navLi.length;
           navNowIndex = $(this).index();
@@ -319,6 +383,7 @@
             navObj.dropdown[navNowIndex].show = 1;
             navObj.index = navNowIndex;
           };
+          console.log('navListBox.click = ', navObj.dropdown[navNowIndex]);
         });
         navListBox.on('click', 'li', function() {
           $(this).addClass('active').siblings('li').removeClass('active');
@@ -339,7 +404,7 @@
         });
         $('.nav-title3-list li').eq(0).click();
 
-        $('.nav-title4-list li').click(function(e) {
+        $('.nav-title4-list').on('click', 'li', function(e) {
           var villageName;
           villageName = $(this).text();
           store.set('villageName', villageName);
@@ -378,21 +443,37 @@
   			// get color depending on population density value
   			function getColor(d) {
           // console.log('dd = ', locationType);
-          var setColor;
-          if (locationType == 'children') {
-            setColor = d > 5 ? '#5A0000' :
-                      d > 4 ? '#9C0000' :
-                      d > 3 ? '#DE1021' :
-                      d > 2 ? '#FF4D52' :
-                        			'#FF7D84';
-          } else {
-            setColor = d > 26 ? '#5A0000' :
-                      d > 21 ? '#9C0000' :
-                      d > 16 ? '#DE1021' :
-                      d > 11 ? '#FF4D52' :
-                          		 '#FF7D84';
+          var color;
+          switch(locationType) {
+            case 'old':
+              color = d >= 3 ? '#5A0000' :
+                        d >= 2 ? '#9C0000' :
+                                 '#FF7D84';
+              break;
+            case 'children':
+              color = d >= 3 ? '#5A0000' :
+                        d >= 2 ? '#9C0000' :
+                                 '#FF7D84';
+              break;
+            case 'intimate':
+              color = d >= 14 ? '#5A0000' :
+                        d >= 11 ? '#9C0000' :
+                        d >= 8 ? '#DE1021' :
+                        d >= 6 ? '#FF4D52' :
+                                 '#FF7D84';
+              break;
+            case 'other':
+              color = d >= 2 ? '#5A0000' :
+                              '#FF7D84';
+              break;
+            default:
+              color = d >= 26 ? '#5A0000' :
+                        d >= 21 ? '#9C0000' :
+                        d >= 16 ? '#DE1021' :
+                        d >= 11 ? '#FF4D52' :
+                                 '#FF7D84';
           }
-  				return setColor;
+  				return color;
   			}
 
   			function style(features) {
@@ -431,8 +512,10 @@
 
   			function zoomToFeature(e) {
          var layer = e.target;
-  			 map.fitBounds(e.target.getBounds());
-         console.log('layer = ', layer.feature.properties.Substitute);
+         var villageName = layer.feature.properties.Substitute;
+  			 //  map.fitBounds(e.target.getBounds());
+         store.set('villageName', villageName);
+         top.location.href = 'village.html';
   			}
 
   			function onEachFeature(feature, layer) {
@@ -454,23 +537,40 @@
 
   			legend.onAdd = function (map) {
 
-  			 var div = L.DomUtil.create('div', 'info legend'),
-  				 grades = [0, 20, 40, 60, 80, 100],
-  				 grades_data = [1, 11, 16, 21, 26, 65],
-  				 labels = [],
-  				 from, to;
+         var div = L.DomUtil.create('div', 'info legend'),
+        	 grades = [],
+        	 grades_data = [],
+        	 labels = [],
+        	 from, to;
 
-         if (locationType == 'children') {
-           grades_data = [1, 2, 3, 4, 5, 6];
+         switch(locationType) {
+           case 'old':
+             grades = [0, 60, 80, 100];
+             grades_data = [1, 2, 3, 7];
+             break;
+           case 'children':
+             grades = [0, 60, 80, 100];
+             grades_data = [1, 2, 3, 8];
+             break;
+           case 'intimate':
+             grades = [0, 20, 40, 60, 80, 100];
+             grades_data = [1, 6, 8, 11, 14, 39];
+             break;
+           case 'other':
+             grades = [0, 80, 100];
+             grades_data = [1, 2, 4];
+             break;
+           default:
+             grades = [0, 20, 40, 60, 80, 100];
+             grades_data = [1, 11, 16, 21, 26, 65];
          }
 
   			 for (var i = 0; i < grades.length - 1; i++) {
   				 from = grades[i];
-  				 from_data = grades_data[i]
+  				 from_data = grades_data[i];
   				 to = grades[i + 1];
-
   				 labels.push(
-  					 '<i style="background:' + getColor(from_data + 1) + '"></i> ' +
+  					 '<i style="background:' + getColor(from_data) + '"></i> ' +
   					 from + (to ? '&ndash;' + to : '+'));
   			 }
 

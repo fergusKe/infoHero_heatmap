@@ -48,6 +48,7 @@
     function setAreaTop10(caseType) {
       var totalArr = [];
       var total = 0;
+
       for (var i = 0; i < TaipeiAreaNameArr.length; i++) {
         total = 0;
         for (var j = 0; j < pTaipeiAreaObj[TaipeiAreaNameArr[i]].length; j++) {
@@ -57,7 +58,7 @@
         totalArr[i]['name'] = TaipeiAreaNameArr[i];
         totalArr[i]['value'] = total;
       }
-
+      console.log('pTaipeiAreaObj = ', pTaipeiAreaObj);
       bubbleSort(totalArr, 'value');
 
       var html = '';
@@ -72,7 +73,7 @@
 
       var html = '';
       for (var i = 0; i < 30; i++) {
-        html += "<li>" + allArr[i]['properties']['Substitute'] + "</li>"
+        html += "<li>" + allArr[i]['properties']['T_Name'] + allArr[i]['properties']['Substitute'] + "</li>"
       }
       $('.village-top10 ul').append(html);
     }
@@ -99,7 +100,7 @@
     var data = [
       {type: '男', value: Math.floor( +pData['男'].replace("%", "") )},
       {type: '女', value: Math.floor( +pData['女'].replace("%", "") )}
-    ]
+    ];
     var width = 130,
         height = 140,
         margin = {left: 50, top: 30, right: 30, bottom: 30},
