@@ -3,13 +3,14 @@ library(rpart)
 library(randomForest)
 library(randomForestSRC)
 
-current_path <- "/Users/brianpan/Desktop/infoHero_heatmap/model/"
 
 args <- commandArgs(trailingOnly=TRUE)
 if( length(args) == 0 ){
 	stop( "必須輸入處理的檔案名稱!", call.=FALSE )
 }
 filename <- args[1]
+# "/Users/brianpan/Desktop/infoHero_heatmap/model/"
+current_path <- args[2]
 
 # random forest 
 rf_feature_rdata <- paste(current_path, "rdata/rf_features.RData", sep="")

@@ -1,7 +1,9 @@
 <?php
+	require_once('./_config.php');
+
 	// 這裡是要搬到的路徑
-	$target_dir = "/Library/WebServer/Documents/uploads/";
-	$output_dir = "/outputs/";
+	$target_dir = UPLOAD_PATH;
+	$output_dir = DOWNLOAD_PATH;
 	// 抓取 file type
 	$csvFileType = strtolower(pathinfo(basename($_FILES['csv']['name']),PATHINFO_EXTENSION));
 
@@ -19,7 +21,7 @@
 
 	$fileWithoutExt = basename($_FILES['csv']['name'], ".csv");
 
-	$message = system('Rscript /Users/brianpan/Desktop/infoHero_heatmap/model/website_model.r '. $fileWithoutExt);
+	$message = system('Rscript '. MODEL_FILE_PATH . ' ' . $fileWithoutExt . ' '. MODEL_DIR_PATH);
 	$predictedFilePath = $output_dir . $fileWithoutExt . "-predicted.csv";
 
 	echo '{"status": 200, "message": "Sucessful moving!", "file_path": "' . $predictedFilePath . '"}';
