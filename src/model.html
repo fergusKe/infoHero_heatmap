@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="./css/lib/leaflet.css" />
   <link rel="stylesheet" href="./css/lib/fakeLoader.css">
   <link rel="stylesheet" href="./css/common.css">
-  <link rel="stylesheet" href="./css/index.css">
+  <link rel="stylesheet" href="./css/model.css">
   <title>家防案件預警及風險管理系統</title>
   <script src="./js/lib/jquery-1.9.1.min.js"></script>
   <script src="./js/lib/store.js"></script>
@@ -48,10 +48,28 @@
     <div class="main">
       <div class="content">
         <div class = "risk-score-panel">
-          <h3 class="title">
-            個案風險指標評估
-          </h3>
-          <div class="body" id="upload">
+          <div class="header">
+            <h3 class="title">
+              個案風險指標評估
+            </h3>
+          </div>
+          <div class="body">
+            <div class = "download col-md-6 panel" id = "download">
+              <div class="body">
+                請在此下載csv格式表格，依照內容填入！  
+              </div>
+              <div class="footer">
+                <a href="/infoHero_heatmap/model/testcases/template_v1.csv" target="_blank">
+                  <button class="btn btn-info">下載表格</button>    
+                </a>
+              </div>
+            </div>
+            <div class = "upload col-md-6 panel" id = "upload">
+              <div class="body">
+                請在此上傳填好的csv表格！  
+              </div>
+              <div class="footer"></div>
+            </div>
           </div>
         </div>
       </div>

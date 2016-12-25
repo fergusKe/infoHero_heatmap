@@ -5,10 +5,13 @@ $(function() {
 });
 
 function uploadComponent(){
-	var $uploadDiv = $("#upload");
-	var $uploadForm = $("<button>上傳CSV<input type=\"file\" /></button>");
+	var $uploadDiv = $("#upload .footer");
+	var $uploadForm = $("<button class=\"btn btn-primary\">上傳CSV</button><input type=\"file\" />");
+	
+	$uploadDiv.append( $uploadForm );
 
-	$uploadForm.find("input[type=\"file\"]").change(function(e){
+	$uploadDiv.find("input[type=\"file\"]").on("change", function(e){
+		console.log("!!!1");
 		var file = this.files[0];
 		file = new File([file], file.name);
 		
@@ -44,6 +47,8 @@ function uploadComponent(){
 		});
     	
 	});
-
-	$uploadDiv.append( $uploadForm );
+	
+	$("#upload button").on("click", function(){
+		$("#upload input").trigger("click");
+	})
 }
