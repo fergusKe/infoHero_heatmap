@@ -38,19 +38,47 @@
         }
       }
     }
-    console.log('pData[index] = ', pData[index]);
+
     chartGender(pData[index]);
     chartAge(pData[index]);
 
-    console.log('caseType = ', caseType);
-
+    setTypeTitle(caseType, pData[index]);
     setAreaTop10(caseType);
     setVillageTop30(caseType);
     setVillageTop5(caseType);
 
+    function setTypeTitle(caseType, pData) {
+      var type, data;
+      switch(true) {
+        case caseType === '各里總案件數':
+          type = '全部';
+          $('.nav-title2-list-box li').eq(0).addClass('active');
+          break;
+        case caseType === '老人保護':
+          type = caseType;
+          $('.nav-title2-list-box li').eq(1).addClass('active');
+          break;
+        case caseType === '兒少保護':
+          type = caseType;
+          $('.nav-title2-list-box li').eq(2).addClass('active');
+          break;
+        case caseType === '親密關係':
+          type = caseType;
+          $('.nav-title2-list-box li').eq(3).addClass('active');
+          break;
+        case caseType === '兄弟姊妹間暴力':
+          type = '其他家虐';
+          $('.nav-title2-list-box li').eq(4).addClass('active');
+          break;
+      }
+      pData = +pData['總案件量'];
+      $('.type-name').text(type);
+      $('.type-num').text(pData);
+    }
     function setAreaTop10(caseType) {
       var totalArr = [];
       var total = 0;
+
       for (var i = 0; i < TaipeiAreaNameArr.length; i++) {
         total = 0;
         for (var j = 0; j < pTaipeiAreaObj[TaipeiAreaNameArr[i]].length; j++) {
@@ -60,7 +88,6 @@
         totalArr[i]['name'] = TaipeiAreaNameArr[i];
         totalArr[i]['value'] = total;
       }
-
       bubbleSort(totalArr, 'value');
 
       var html = '';
@@ -75,7 +102,7 @@
 
       var html = '';
       for (var i = 0; i < 30; i++) {
-        html += "<li>" + allArr[i]['properties']['Substitute'] + "</li>"
+        html += "<li>" + allArr[i]['properties']['T_Name'] + allArr[i]['properties']['Substitute'] + "</li>"
       }
       $('.village-top10 ul').append(html);
     }
@@ -98,11 +125,31 @@
       }
     }
   }
+  function adjustVal(data) {
+    var dataArr = [];
+    var totalVal = 0;
+    var maxVal = data[0].value;
+    var maxIndex = 0;
+    var difference = 0;
+    for(var i = 0; i < data.length; i++) {
+      dataArr.push(data[i].value);
+      totalVal += data[i].value;
+      if (data[i].value > maxVal) {
+        maxIndex = i;
+        maxVal = data[i].value;
+      }
+    }
+    difference = 100 - totalVal;
+    data[maxIndex].value += difference;
+    return data;
+  }
   function chartGender(pData) {
     var data = [
-      {type: '男', value: +pData['男'].replace("%", "")},
-      {type: '女', value: +pData['女'].replace("%", "")}
-    ]
+      {type: '男', value: Math.round( +pData['男'].replace("%", "") )},
+      {type: '女', value: Math.round( +pData['女'].replace("%", "") )}
+    ];
+    data = adjustVal(data);
+
     var width = 130,
         height = 140,
         margin = {left: 50, top: 30, right: 30, bottom: 30},
@@ -162,11 +209,12 @@
   }
   function chartAge(pData) {
       var data = [
-        {type: '~18', value: +pData['小於18歲'].replace("%", "")},
-        {type: '18~65', value: +pData['18到65歲'].replace("%", "")},
-        {type: '65~', value: +pData['大於65歲'].replace("%", "")}
+        {type: '~18', value: Math.round( +pData['小於18歲'].replace("%", "") )},
+        {type: '18~65', value: Math.round( +pData['18到65歲'].replace("%", "") )},
+        {type: '65~', value: Math.round( +pData['大於65歲'].replace("%", "") )}
       ];
-
+      data = adjustVal(data);
+      
       var width = 130,
         height = 140,
         margin = {left: 50, top: 30, right: 30, bottom: 30},

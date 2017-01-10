@@ -9,4 +9,9 @@
 }
 .list {
   width: 270px;
+  &.village-top10 {
+    ul {
+      width: 116px;
+    }
+  }
 }
