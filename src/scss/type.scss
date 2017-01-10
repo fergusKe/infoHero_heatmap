@@ -22,7 +22,14 @@ $nav-title4: #ffb300;
   margin-top: 20px;
 }
 .statistic {
+  position: relative;
   display: inline-block;
+  .percent {
+    position: absolute;
+    left: -2px;
+    bottom: 89px;
+    font-size: 12px;
+  }
 }
 
 .village-top10 {
